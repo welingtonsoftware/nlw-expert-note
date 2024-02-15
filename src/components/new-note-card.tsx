@@ -6,6 +6,9 @@ import { toast } from "sonner";
 interface NewNoteCardProps {
   onNoteCreated: (content: string) => void;
 }
+
+let speechRecognition: SpeechRecognition | null = null;
+
 export function NewNoteCard({ onNoteCreated }: NewNoteCardProps) {
   const [shouldShowOnboarding, setShoudShowOnboarding] = useState(true);
   const [isRecording, setIsRecording] = useState(true);
@@ -25,6 +28,10 @@ export function NewNoteCard({ onNoteCreated }: NewNoteCardProps) {
   function handleSaveNote(event: FormEvent) {
     event.preventDefault();
 
+    if (content == "") {
+      return;
+    }
+
     onNoteCreated(content);
 
     setContent("");
@@ -34,11 +41,50 @@ export function NewNoteCard({ onNoteCreated }: NewNoteCardProps) {
   }
 
   function handleStartRecording() {
-    setIsRecording(true)
+    setIsRecording(true);
+
+    const isSpeechRecognitionAPIAvailable =
+      "SpeechRecognition" in window || "webkitSpeechRecognition" in window;
+
+    if (!isSpeechRecognitionAPIAvailable) {
+      alert("Infelizmente seu navegador não suporta a API de gravação!");
+      return;
+    }
+
+    setIsRecording(true);
+    setShoudShowOnboarding(false);
+
+    const SpeechRecognitionAPI =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    speechRecognition = new SpeechRecognitionAPI();
+
+    speechRecognition.lang = "pt-BR";
+    speechRecognition.continuous = true;
+    speechRecognition.maxAlternatives = 1;
+    speechRecognition.interimResults = true;
+
+    speechRecognition.onresult = (event) => {
+      const transcription = Array.from(event.results).reduce((text, result) => {
+        return text.concat(result[0].transcript);
+      }, "");
+
+      setContent(transcription);
+    };
+
+    speechRecognition.onerror = (event) => {
+      console.error(event);
+    };
+
+    speechRecognition.start();
   }
 
   function handleStopRecording() {
-    setIsRecording(false)
+    setIsRecording(false);
+
+    if (speechRecognition !== null) {
+      speechRecognition.stop();
+    }
   }
 
   return (
@@ -60,7 +106,7 @@ export function NewNoteCard({ onNoteCreated }: NewNoteCardProps) {
             <X className="size-5" />
           </Dialog.Close>
 
-          <form  className="flex-1 flex flex-col">
+          <form className="flex-1 flex flex-col">
             <div className="flex flex-1 flex-col gap-3 p-5">
               <span className="text-sm font-medium text-slate-300">
                 Adicionar nota
