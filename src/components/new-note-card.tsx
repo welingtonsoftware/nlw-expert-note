@@ -89,19 +89,20 @@ export function NewNoteCard({ onNoteCreated }: NewNoteCardProps) {
 
   return (
     <Dialog.Root>
-      <Dialog.Trigger className="rounded-md flex flex-col bg-slate-700 text-left p-5 gap-3 outline-none hover:right-2  hover:ring-slate-600 focus-visible:ring-2 focus-visible:ring-lime-400">
+      <Dialog.Trigger className="rounded-md flex flex-col gap-3 text-left bg-slate-700 p-5 hover:ring-2 hover:ring-slate-600 focus-visible:ring-2 focus-visible:ring-lime-400 outline-none">
         <span className="text-sm font-medium text-slate-200">
           Adicionar nota
         </span>
+
         <p className="text-sm leading-6 text-slate-400">
-          Grave uma nota em aúdio que será convertida para texto
+          Grave uma nota em áudio que será convertida para texto
           automaticamente.
         </p>
       </Dialog.Trigger>
 
       <Dialog.Portal>
         <Dialog.Overlay className="inset-0 fixed bg-black/50" />
-        <Dialog.Content className="fixed overflow-hidden left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 max-w[640px] w-full h-[60vh] bg-slate-700 rounded-md felx flex-col">
+        <Dialog.Content className="fixed overflow-hidden inset-0 md:inset-auto md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:max-w-[640px] w-full md:h-[60vh] bg-slate-700 md:rounded-md flex flex-col outline-none">
           <Dialog.Close className="absolute right-0 top-0 bg-slate-800 p-1.5 text-slate-400 hover:text-slate-100">
             <X className="size-5" />
           </Dialog.Close>
@@ -111,13 +112,14 @@ export function NewNoteCard({ onNoteCreated }: NewNoteCardProps) {
               <span className="text-sm font-medium text-slate-300">
                 Adicionar nota
               </span>
+
               {shouldShowOnboarding ? (
                 <p className="text-sm leading-6 text-slate-400">
                   Comece{" "}
                   <button
                     type="button"
                     onClick={handleStartRecording}
-                    className="font-medium text-lime-400 hover:underline "
+                    className="font-medium text-lime-400 hover:underline"
                   >
                     gravando uma nota
                   </button>{" "}
@@ -125,10 +127,11 @@ export function NewNoteCard({ onNoteCreated }: NewNoteCardProps) {
                   <button
                     type="button"
                     onClick={handleStartEditor}
-                    className="font-medium text-lime-400 hover:underline "
+                    className="font-medium text-lime-400 hover:underline"
                   >
-                    utilize apenas texto.
+                    utilize apenas texto
                   </button>
+                  .
                 </p>
               ) : (
                 <textarea
@@ -147,7 +150,7 @@ export function NewNoteCard({ onNoteCreated }: NewNoteCardProps) {
                 className="w-full flex items-center justify-center gap-2 bg-slate-900 py-4 text-center text-sm text-slate-300 outline-none font-medium hover:text-slate-100"
               >
                 <div className="size-3 rounded-full bg-red-500 animate-pulse" />
-                Gravando! (clique para interromper)
+                Gravando! (clique p/ interromper)
               </button>
             ) : (
               <button
